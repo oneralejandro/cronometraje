@@ -23,31 +23,31 @@ db.connect(err => {
   }
 });
 
-// Ruta de la API para obtener los datos desde la base de datos
+// Ruta de prueba
 app.get('/api/data', (req, res) => {
-  db.query('SELECT * FROM usuarios', (err, result) => {
-    if (err) {
-      console.error('Database query error:', err);  // Log de error con más detalles
-      res.status(500).send('Database error');
-    } else {
-      console.log('Database query result:', result);  // Log del resultado de la consulta
-      res.json(result);
-    }
+    db.query('SELECT * FROM usuarios', (err, result) => {  
+      if (err) {
+        console.error('Database query error:', err);  // Log de error con más detalles
+        res.status(500).send('Database error');
+      } else {
+        console.log('Database query result:', result);  // Log del resultado de la consulta
+        res.json(result);
+      }
+    });
   });
-});
-
-// Enviar los archivos estáticos de React solo cuando estemos en producción
-if (process.env.NODE_ENV === 'production') {
-  // Sirve los archivos estáticos de React desde la carpeta build
-  app.use(express.static(path.join(__dirname, 'client', 'build')));
-
-  // Redirige todas las rutas no definidas a la aplicación React
-  app.get('*', (req, res) => {
-    res.sendFile(path.resolve(__dirname, 'client', 'build', 'index.html'));
-  });
-}
 
 // Iniciar el servidor
 app.listen(port, () => {
   console.log(`Server is running on port ${port}`);
 });
+
+// Sirve los archivos estáticos de React en producción
+if (process.env.NODE_ENV === 'production') {
+  // Sirve los archivos estáticos de React
+  app.use(express.static(path.join(__dirname, '..', 'client', 'build')));
+
+  // Redirige todas las rutas no definidas a la aplicación React
+  app.get('*', (req, res) => {
+    res.sendFile(path.resolve(__dirname, '..', 'client', 'build', 'index.html'));
+  });
+}
