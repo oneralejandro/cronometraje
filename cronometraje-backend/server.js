@@ -10,18 +10,13 @@ const port = process.env.PORT || 5000;
 app.use(cors());
 app.use(express.json());  // Para parsear las solicitudes JSON
 
-// Crear la conexión a la base de datos MySQL
-const db = mysql.createConnection({
-  host: process.env.DB_HOST,
-  user: process.env.DB_USER,
-  password: process.env.DB_PASSWORD,
-  database: process.env.DB_NAME
-});
+// Crear la conexión a la base de datos MySQL usando la URL proporcionada por Heroku
+const db = mysql.createConnection(process.env.JAWSDB_URL);
 
 // Conectar a la base de datos
 db.connect(err => {
   if (err) {
-    console.error('Error connecting to the database:', err);
+    console.error('Error connecting to the database:', err.stack);
   } else {
     console.log('Connected to the MySQL database');
   }
@@ -29,20 +24,33 @@ db.connect(err => {
 
 // Ruta de prueba
 app.get('/api/data', (req, res) => {
-  db.query('SELECT * FROM your_table', (err, result) => {
+    db.query('SELECT * FROM usuarios', (err, result) => {  
+      if (err) {
+        console.error('Database query error:', err);  // Log de error con más detalles
+        res.status(500).send('Database error');
+      } else {
+        console.log('Database query result:', result);  // Log del resultado de la consulta
+        res.json(result);
+      }
+    });
+  });
+  
+
+  db.connect(err => {
     if (err) {
-      res.status(500).send('Database error');
+      console.error('Error connecting to the database:', err.stack);
     } else {
-      res.json(result);
+      console.log('Connected to the MySQL database');
     }
   });
-});
+  
+
+
 
 // Iniciar el servidor
 app.listen(port, () => {
   console.log(`Server is running on port ${port}`);
 });
-
 
 const path = require('path');
 
