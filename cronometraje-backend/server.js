@@ -42,3 +42,16 @@ app.get('/api/data', (req, res) => {
 app.listen(port, () => {
   console.log(`Server is running on port ${port}`);
 });
+
+
+const path = require('path');
+
+if (process.env.NODE_ENV === 'production') {
+  // Sirve los archivos estáticos de React
+  app.use(express.static(path.join(__dirname, 'client', 'build')));
+
+  // Redirige todas las rutas no definidas a la aplicación React
+  app.get('*', (req, res) => {
+    res.sendFile(path.resolve(__dirname, 'client', 'build', 'index.html'));
+  });
+}
