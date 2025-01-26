@@ -24,34 +24,23 @@ db.connect(err => {
 
 // Ruta de prueba
 app.get('/api/data', (req, res) => {
-    db.query('SELECT * FROM usuarios', (err, result) => {  
-      if (err) {
-        console.error('Database query error:', err);  // Log de error con más detalles
-        res.status(500).send('Database error');
-      } else {
-        console.log('Database query result:', result);  // Log del resultado de la consulta
-        res.json(result);
-      }
-    });
-  });
-  
-
-  db.connect(err => {
+  db.query('SELECT * FROM usuarios', (err, result) => {  
     if (err) {
-      console.error('Error connecting to the database:', err.stack);
+      console.error('Database query error:', err);  // Log de error con más detalles
+      res.status(500).send('Database error');
     } else {
-      console.log('Connected to the MySQL database');
+      console.log('Database query result:', result);  // Log del resultado de la consulta
+      res.json(result);
     }
   });
-  
-
-
+});
 
 // Iniciar el servidor
 app.listen(port, () => {
   console.log(`Server is running on port ${port}`);
 });
 
+// Código para servir el frontend en producción
 const path = require('path');
 // Sirve los archivos estáticos de React en producción
 if (process.env.NODE_ENV === 'production') {
