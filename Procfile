@@ -1,1 +1,1 @@
-web: cd cronometraje-backend && npm install && npm start
+web: node cronometraje-backend/server.js
