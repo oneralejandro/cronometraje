@@ -53,13 +53,13 @@ app.listen(port, () => {
 });
 
 const path = require('path');
-
+// Sirve los archivos estáticos de React en producción
 if (process.env.NODE_ENV === 'production') {
-  // Sirve los archivos estáticos de React
-  app.use(express.static(path.join(__dirname, 'client', 'build')));
+  // Cambiar la ruta a la carpeta 'client/build' en la raíz
+  app.use(express.static(path.resolve(__dirname, '../client/build')));
 
-  // Redirige todas las rutas no definidas a la aplicación React
+  // Redirigir todas las rutas no definidas a la aplicación React
   app.get('*', (req, res) => {
-    res.sendFile(path.resolve(__dirname, 'client', 'build', 'index.html'));
+    res.sendFile(path.resolve(__dirname, '../client/build', 'index.html'));
   });
 }
