@@ -2,6 +2,7 @@ const express = require('express');
 const mysql = require('mysql2');
 const cors = require('cors');
 require('dotenv').config();  // Para usar las variables de entorno
+const path = require('path'); // Aseguramos que 'path' esté bien importado
 
 const app = express();
 const port = process.env.PORT || 5000;
@@ -24,27 +25,20 @@ db.connect(err => {
 
 // Ruta de prueba
 app.get('/api/data', (req, res) => {
-  db.query('SELECT * FROM usuarios', (err, result) => {  
+  db.query('SELECT * FROM usuarios', (err, result) => {
     if (err) {
-      console.error('Database query error:', err);  // Log de error con más detalles
+      console.error('Database query error:', err);
       res.status(500).send('Database error');
     } else {
-      console.log('Database query result:', result);  // Log del resultado de la consulta
+      console.log('Database query result:', result);
       res.json(result);
     }
   });
 });
 
-// Iniciar el servidor
-app.listen(port, () => {
-  console.log(`Server is running on port ${port}`);
-});
-
-// Código para servir el frontend en producción
-const path = require('path');
-// Sirve los archivos estáticos de React en producción
+// Si estamos en producción, servir los archivos estáticos de React
 if (process.env.NODE_ENV === 'production') {
-  // Cambiar la ruta a la carpeta 'client/build' en la raíz
+  // Cambiar la ruta a la carpeta 'client/build' que está en la raíz
   app.use(express.static(path.resolve(__dirname, '../client/build')));
 
   // Redirigir todas las rutas no definidas a la aplicación React
@@ -52,3 +46,8 @@ if (process.env.NODE_ENV === 'production') {
     res.sendFile(path.resolve(__dirname, '../client/build', 'index.html'));
   });
 }
+
+// Iniciar el servidor
+app.listen(port, () => {
+  console.log(`Server is running on port ${port}`);
+});
