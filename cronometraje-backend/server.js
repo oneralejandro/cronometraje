@@ -37,16 +37,17 @@ app.get('/api/data', (req, res) => {
 });
 
 // Si estamos en producción, servir los archivos estáticos de React
-const path = require('path');
-
-// Sirve los archivos estáticos de React en producción
 if (process.env.NODE_ENV === 'production') {
-  // Cambiar la ruta a la carpeta 'cronometraje/client/build' en la raíz
-  app.use(express.static(path.resolve(__dirname, '../cronometraje/client/build')));
+  // Cambiar la ruta a la carpeta 'client/build' que está en la raíz
+  app.use(express.static(path.resolve(__dirname, 'client/build')));
 
   // Redirigir todas las rutas no definidas a la aplicación React
   app.get('*', (req, res) => {
-    res.sendFile(path.resolve(__dirname, '../cronometraje/client/build', 'index.html'));
+    res.sendFile(path.resolve(__dirname, 'client/build', 'index.html'));
   });
 }
 
+// Iniciar el servidor
+app.listen(port, () => {
+  console.log(`Server is running on port ${port}`);
+});
